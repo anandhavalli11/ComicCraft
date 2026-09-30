@@ -386,3 +386,13 @@ If it shows the file, **README setup is done ✅**
 ### Next
 
 Then we'll do the **final code cleanup**: check `main.py`, `config.py`, services, empty files, and test files so there are no unnecessary/dead files before calling the project complete.
+ 
+ ## 📸 Screenshots
+
+### 🏠 ComicCraft Generator
+
+![ComicCraft Home](docs/screenshots/home.png)
+
+### 🎨 Generated Comic
+
+![Generated Comic](docs/screenshots/generated-comic.png)
