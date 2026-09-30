@@ -1,0 +1,573 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{{ comic.title }} | ComicCraft</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/css/style.css"
+    >
+
+    <style>
+        /* =========================
+           COMIC RESULT PAGE
+        ========================= */
+
+        body {
+            margin: 0;
+            background: #f7f5ff;
+            color: #20202a;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 7%;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid #e7e3f4;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .logo-icon {
+            font-size: 25px;
+        }
+
+        .back-button {
+            text-decoration: none;
+            background: #20202a;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* MAIN */
+
+        .comic-container {
+            width: min(1100px, 90%);
+            margin: 45px auto 70px;
+        }
+
+        /* HEADER */
+
+        .comic-header {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 999px;
+            background: #ebe6ff;
+            color: #6845d8;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .comic-header h1 {
+            margin: 5px 0 15px;
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 1.05;
+            font-weight: 900;
+        }
+
+        .comic-header > p {
+            max-width: 760px;
+            margin: 0 auto 25px;
+            color: #666675;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        /* METADATA */
+
+        .metadata {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 25px auto;
+        }
+
+        .metadata span {
+            background: white;
+            border: 1px solid #e5e1ef;
+            border-radius: 10px;
+            padding: 9px 13px;
+            font-size: 14px;
+            color: #555363;
+        }
+
+        /* DOWNLOAD */
+
+        .download-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 13px 22px;
+            border-radius: 11px;
+            background: #6845d8;
+            color: white;
+            text-decoration: none;
+            font-weight: 800;
+            box-shadow: 0 7px 20px rgba(104, 69, 216, 0.22);
+            transition: 0.2s ease;
+        }
+
+        .download-button:hover {
+            transform: translateY(-2px);
+            background: #5736c5;
+        }
+
+        /* COMIC GRID */
+
+        .comic-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 30px;
+        }
+
+        /* PANEL */
+
+        .comic-panel {
+            position: relative;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #e5e1ef;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(45, 38, 70, 0.08);
+            transition: 0.25s ease;
+        }
+
+        .comic-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 38px rgba(45, 38, 70, 0.13);
+        }
+
+        .panel-number {
+            display: inline-block;
+            margin: 18px 18px 8px;
+            padding: 6px 10px;
+            border-radius: 7px;
+            background: #20202a;
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+        }
+
+        .comic-panel h2 {
+            margin: 5px 18px 18px;
+            font-size: 24px;
+            line-height: 1.2;
+        }
+
+        /* IMAGE */
+
+        .panel-image {
+            width: 100%;
+            background: #eeeeee;
+            overflow: hidden;
+        }
+
+        .panel-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1200 / 850;
+            object-fit: cover;
+            transition: 0.3s ease;
+        }
+
+        .comic-panel:hover .panel-image img {
+            transform: scale(1.015);
+        }
+
+        /* CONTENT */
+
+        .panel-content {
+            padding: 20px;
+        }
+
+        .story-block {
+            margin-bottom: 18px;
+        }
+
+        .story-block strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .story-block p {
+            margin: 0;
+            color: #666675;
+            line-height: 1.65;
+        }
+
+        /* DIALOGUE */
+
+        .dialogue {
+            position: relative;
+            margin-top: 18px;
+            padding: 15px 18px;
+            background: #fff8d9;
+            border: 2px solid #20202a;
+            border-radius: 16px;
+        }
+
+        .dialogue::before {
+            content: "";
+            position: absolute;
+            left: 22px;
+            bottom: -12px;
+            width: 18px;
+            height: 18px;
+            background: #fff8d9;
+            border-right: 2px solid #20202a;
+            border-bottom: 2px solid #20202a;
+            transform: rotate(45deg);
+        }
+
+        .dialogue strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .dialogue p {
+            margin: 0;
+            font-weight: 600;
+            line-height: 1.55;
+        }
+
+        /* FOOTER */
+
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            color: #888794;
+            border-top: 1px solid #e5e1ef;
+            background: white;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 800px) {
+
+            .navbar {
+                padding: 15px 5%;
+            }
+
+            .comic-container {
+                width: 92%;
+                margin-top: 30px;
+            }
+
+            .comic-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .comic-header {
+                margin-bottom: 40px;
+            }
+
+            .comic-header h1 {
+                font-size: 36px;
+            }
+
+            .comic-header > p {
+                font-size: 15px;
+            }
+
+            .metadata {
+                gap: 7px;
+            }
+
+            .metadata span {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .logo {
+                font-size: 19px;
+            }
+
+            .back-button {
+                padding: 9px 12px;
+                font-size: 13px;
+            }
+
+            .comic-header h1 {
+                font-size: 30px;
+            }
+
+            .comic-panel h2 {
+                font-size: 21px;
+            }
+
+            .panel-content {
+                padding: 16px;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="logo">
+
+        <span class="logo-icon">
+            ✨
+        </span>
+
+        <span>
+            ComicCraft
+        </span>
+
+    </div>
+
+
+    <a
+        href="/"
+        class="back-button"
+    >
+        ✨ Create Another
+    </a>
+
+</header>
+
+
+
+<main class="comic-container">
+
+
+    <!-- =========================
+         COMIC HEADER
+    ========================== -->
+
+    <section class="comic-header">
+
+        <span class="badge">
+            ✨ AI GENERATED COMIC
+        </span>
+
+
+        <h1>
+            {{ comic.title }}
+        </h1>
+
+
+        <p>
+            {{ comic.story }}
+        </p>
+
+
+        <div class="metadata">
+
+            <span>
+                👤 {{ comic.character }}
+            </span>
+
+            <span>
+                🌲 {{ comic.setting }}
+            </span>
+
+            <span>
+                🎭 {{ comic.tone }}
+            </span>
+
+            <span>
+                🎨 {{ comic.art_style }}
+            </span>
+
+        </div>
+
+
+        {% if comic.pdf_url %}
+
+        <a
+            href="{{ comic.pdf_url }}"
+            class="download-button"
+            target="_blank"
+        >
+            📥 Download Comic PDF
+        </a>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- =========================
+         COMIC PANELS
+    ========================== -->
+
+    <section class="comic-grid">
+
+
+        {% for panel in comic.panels %}
+
+
+        <article class="comic-panel">
+
+
+            <div class="panel-number">
+
+                PANEL {{ panel.panel_number }}
+
+            </div>
+
+
+            <h2>
+                {{ panel.title }}
+            </h2>
+
+
+            {% if panel.image_url %}
+
+            <div class="panel-image">
+
+                <img
+                    src="{{ panel.image_url }}"
+                    alt="Comic panel {{ panel.panel_number }} - {{ panel.title }}"
+                    loading="lazy"
+                >
+
+            </div>
+
+            {% endif %}
+
+
+
+            <div class="panel-content">
+
+
+                {% if panel.scene %}
+
+                <div class="story-block">
+
+                    <strong>
+                        🎬 Scene
+                    </strong>
+
+                    <p>
+                        {{ panel.scene }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if panel.narration %}
+
+                <div class="story-block">
+
+                    <strong>
+                        📖 Narration
+                    </strong>
+
+                    <p>
+                        {{ panel.narration }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if panel.dialogue %}
+
+                <div class="dialogue">
+
+                    <strong>
+                        💬 Character Dialogue
+                    </strong>
+
+                    <p>
+                        {{ panel.dialogue }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </article>
+
+
+        {% endfor %}
+
+
+    </section>
+
+
+</main>
+
+
+
+<footer>
+
+    <p>
+        ✨ Generated with ComicCraft — Turn Your Ideas Into Comics
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
+```
