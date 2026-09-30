@@ -396,3 +396,7 @@ Then we'll do the **final code cleanup**: check `main.py`, `config.py`, services
 ### 🎨 Generated Comic
 
 ![Generated Comic](docs/screenshots/generated-comic.png)
+
+## 📄 Demo PDF
+
+[📥 Download Sample Comic PDF](docs/demo/ComicCraft-Demo.pdf)
